@@ -40,7 +40,7 @@ func TestBlockAddEvidence(t *testing.T) {
 	commit, err := MakeCommit(lastID, h-1, 1, voteSet, vals)
 	require.NoError(t, err)
 
-	ev := NewMockGoodEvidence(h, 0, valSet.Validators[0].Address)
+	ev := NewMockEvidence(h, time.Now(), 0, valSet.Validators[0].Address)
 	evList := []Evidence{ev}
 
 	block := MakeBlock(h, txs, commit, evList)
@@ -60,7 +60,7 @@ func TestBlockValidateBasic(t *testing.T) {
 	commit, err := MakeCommit(lastID, h-1, 1, voteSet, vals)
 	require.NoError(t, err)
 
-	ev := NewMockGoodEvidence(h, 0, valSet.Validators[0].Address)
+	ev := NewMockEvidence(h, time.Now(), 0, valSet.Validators[0].Address)
 	evList := []Evidence{ev}
 
 	testCases := []struct {
@@ -81,7 +81,7 @@ func TestBlockValidateBasic(t *testing.T) {
 			blk.Data.hash = nil // clear hash or change wont be noticed
 		}, true},
 		{"Tampered DataHash", func(blk *Block) {
-			blk.DataHash = tmrand.RandBytes(len(blk.DataHash))
+			blk.DataHash = tmrand.Bytes(len(blk.DataHash))
 		}, true},
 		{"Tampered EvidenceHash", func(blk *Block) {
 			blk.EvidenceHash = []byte("something else")
@@ -123,7 +123,7 @@ func TestBlockMakePartSetWithEvidence(t *testing.T) {
 	commit, err := MakeCommit(lastID, h-1, 1, voteSet, vals)
 	require.NoError(t, err)
 
-	ev := NewMockGoodEvidence(h, 0, valSet.Validators[0].Address)
+	ev := NewMockEvidence(h, time.Now(), 0, valSet.Validators[0].Address)
 	evList := []Evidence{ev}
 
 	partSet := MakeBlock(h, []Tx{Tx("Hello World")}, commit, evList).MakePartSet(512)
@@ -140,7 +140,7 @@ func TestBlockHashesTo(t *testing.T) {
 	commit, err := MakeCommit(lastID, h-1, 1, voteSet, vals)
 	require.NoError(t, err)
 
-	ev := NewMockGoodEvidence(h, 0, valSet.Validators[0].Address)
+	ev := NewMockEvidence(h, time.Now(), 0, valSet.Validators[0].Address)
 	evList := []Evidence{ev}
 
 	block := MakeBlock(h, []Tx{Tx("Hello World")}, commit, evList)
