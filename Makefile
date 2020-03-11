@@ -57,6 +57,16 @@ build_abci:
 install_abci:
 	@go install -mod=readonly ./abci/cmd/...
 
+launch_all:
+	CGO_ENABLED=0 go install $(BUILD_FLAGS) -tags $(BUILD_TAGS) ./cmd/tendermint
+	@go install -mod=readonly ./abci/cmd/...
+	$(GOPATH)/bin/tendermint node &
+	$(GOPATH)/bin//abci-cli tenderlic-kvstore &
+
+kill_all:
+	killall tendermint
+	killall abci-cli
+
 ########################################
 ### Distribution
 

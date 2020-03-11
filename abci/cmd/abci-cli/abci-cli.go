@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/tendermint/tendermint/abci/example/kvstore"
 	"io"
 	"os"
 	"strings"
@@ -16,8 +17,7 @@ import (
 
 	abcicli "github.com/tendermint/tendermint/abci/client"
 	"github.com/tendermint/tendermint/abci/example/code"
-	"github.com/tendermint/tendermint/abci/example/counter"
-	"github.com/tendermint/tendermint/abci/example/kvstore"
+	"github.com/tendermint/tendermint/abci/example/tenderlic_kvstore"
 	"github.com/tendermint/tendermint/abci/server"
 	servertest "github.com/tendermint/tendermint/abci/tests/server"
 	"github.com/tendermint/tendermint/abci/types"
@@ -44,9 +44,6 @@ var (
 	flagHeight int
 	flagProve  bool
 
-	// counter
-	flagSerial bool
-
 	// kvstore
 	flagPersist string
 )
@@ -58,7 +55,7 @@ var RootCmd = &cobra.Command{
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 
 		switch cmd.Use {
-		case "counter", "kvstore": // for the examples apps, don't pre-run
+		case "tenderlic-kvstore":
 			return nil
 		case "version": // skip running for version command
 			return nil
@@ -135,12 +132,8 @@ func addQueryFlags() {
 		"whether or not to return a merkle proof of the query result")
 }
 
-func addCounterFlags() {
-	counterCmd.PersistentFlags().BoolVarP(&flagSerial, "serial", "", false, "enforce incrementing (serial) transactions")
-}
-
-func addKVStoreFlags() {
-	kvstoreCmd.PersistentFlags().StringVarP(&flagPersist, "persist", "", "", "directory to use for a database")
+func addTLKVStoreFlags() {
+	tlKVstoreCmd.PersistentFlags().StringVarP(&flagPersist, "persist", "", "", "directory to use for a database")
 }
 
 func addCommands() {
@@ -157,11 +150,9 @@ func addCommands() {
 	addQueryFlags()
 	RootCmd.AddCommand(queryCmd)
 
-	// examples
-	addCounterFlags()
-	RootCmd.AddCommand(counterCmd)
-	addKVStoreFlags()
-	RootCmd.AddCommand(kvstoreCmd)
+	// Applications
+	addTLKVStoreFlags()
+	RootCmd.AddCommand(tlKVstoreCmd)
 }
 
 var batchCmd = &cobra.Command{
@@ -267,18 +258,10 @@ var queryCmd = &cobra.Command{
 	RunE:  cmdQuery,
 }
 
-var counterCmd = &cobra.Command{
-	Use:   "counter",
-	Short: "ABCI demo example",
-	Long:  "ABCI demo example",
-	Args:  cobra.ExactArgs(0),
-	RunE:  cmdCounter,
-}
-
-var kvstoreCmd = &cobra.Command{
-	Use:   "kvstore",
-	Short: "ABCI demo example",
-	Long:  "ABCI demo example",
+var tlKVstoreCmd = &cobra.Command{
+	Use:   "tenderlic-kvstore",
+	Short: "ABCI TenderLic",
+	Long:  "ABCI TenderLic",
 	Args:  cobra.ExactArgs(0),
 	RunE:  cmdKVStore,
 }
@@ -625,43 +608,20 @@ func cmdQuery(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func cmdCounter(cmd *cobra.Command, args []string) error {
-	app := counter.NewApplication(flagSerial)
-	logger := log.NewTMLogger(log.NewSyncWriter(os.Stdout))
-
-	// Start the listener
-	srv, err := server.NewServer(flagAddress, flagAbci, app)
-	if err != nil {
-		return err
-	}
-	srv.SetLogger(logger.With("module", "abci-server"))
-	if err := srv.Start(); err != nil {
-		return err
-	}
-
-	// Stop upon receiving SIGTERM or CTRL-C.
-	tmos.TrapSignal(logger, func() {
-		// Cleanup
-		srv.Stop()
-	})
-
-	// Run forever.
-	select {}
-}
-
 func cmdKVStore(cmd *cobra.Command, args []string) error {
 	logger := log.NewTMLogger(log.NewSyncWriter(os.Stdout))
 
 	// Create the application - in memory or persisted to disk
 	var app types.Application
 	if flagPersist == "" {
-		app = kvstore.NewApplication()
+		app = tenderlic_kvstore.NewApplication()
 	} else {
 		app = kvstore.NewPersistentKVStoreApplication(flagPersist)
-		app.(*kvstore.PersistentKVStoreApplication).SetLogger(logger.With("module", "kvstore"))
+		app.(*kvstore.PersistentKVStoreApplication).SetLogger(logger.With("module", "tenderlic-kvstore"))
 	}
 
 	// Start the listener
+	fmt.Println(flagAddress)
 	srv, err := server.NewServer(flagAddress, flagAbci, app)
 	if err != nil {
 		return err
