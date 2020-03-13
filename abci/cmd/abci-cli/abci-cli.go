@@ -55,7 +55,7 @@ var RootCmd = &cobra.Command{
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 
 		switch cmd.Use {
-		case "tenderlic-kvstore":
+		case "tenderlic_kvstore":
 			return nil
 		case "version": // skip running for version command
 			return nil
@@ -259,7 +259,7 @@ var queryCmd = &cobra.Command{
 }
 
 var tlKVstoreCmd = &cobra.Command{
-	Use:   "tenderlic-kvstore",
+	Use:   "tenderlic_kvstore",
 	Short: "ABCI TenderLic",
 	Long:  "ABCI TenderLic",
 	Args:  cobra.ExactArgs(0),
@@ -617,7 +617,7 @@ func cmdKVStore(cmd *cobra.Command, args []string) error {
 		app = tenderlic_kvstore.NewApplication()
 	} else {
 		app = kvstore.NewPersistentKVStoreApplication(flagPersist)
-		app.(*kvstore.PersistentKVStoreApplication).SetLogger(logger.With("module", "tenderlic-kvstore"))
+		app.(*kvstore.PersistentKVStoreApplication).SetLogger(logger.With("module", "tenderlic_kvstore"))
 	}
 
 	// Start the listener
