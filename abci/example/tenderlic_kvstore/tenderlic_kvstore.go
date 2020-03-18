@@ -215,23 +215,23 @@ func (app *Application) CheckTx(req types.RequestCheckTx) types.ResponseCheckTx 
 	var flagAllowed = data[0]
 	data = strings.Split(data[0], "_")
 
-	logger.Info(fmt.Sprintf("Checking transaction %s", req.String()))
+	//logger.Info(fmt.Sprintf("Checking transaction %s", req.String()))
+	logger.Info(fmt.Sprintf("Checking transaction "))
 
 	if flagAllowed == "tx:\"allowed" {
-		logger.Info(fmt.Sprintf("Allowance transaction: %s", req.String()))
+		logger.Info(fmt.Sprintf("Allowance transaction"))
 	} else if len(data) == 3 { // Check the data format
 
 		// Check the signature
-		if app.checkSigner(data) == false {
+		/*if app.checkSigner(data) == false {
 			return types.ResponseCheckTx{Code: code.CodeTypeCheatingMeter, GasWanted: 1}
-		}
+		}*/
 
-		// todo STILL TO IMPLEMENT: time checking
 		// Check the time format
-		//ts := data[2]
-		//if app.checkTime(ts) == false {
-		//	return types.ResponseCheckTx{Code: code.CodeTypeBadTimeFormat, GasWanted: 1}
-		//}
+		/*ts := data[2]
+		if app.checkTime(ts) == false {
+			return types.ResponseCheckTx{Code: code.CodeTypeBadTimeFormat, GasWanted: 1}
+		}*/
 
 		// Check the meter allowance
 		keyFlag := []byte("allowed")
@@ -244,11 +244,11 @@ func (app *Application) CheckTx(req types.RequestCheckTx) types.ResponseCheckTx 
 			return types.ResponseCheckTx{Code: code.CodeTypeUnauthorized, GasWanted: 1}
 		}
 	} else {
-		logger.Error(fmt.Sprintf("Transaction %s -> Bad request", req.String()))
+		logger.Error(fmt.Sprintf("Bad request"))
 		return types.ResponseCheckTx{Code: code.CodeTypeBadRequest, GasWanted: 1}
 	}
 
-	logger.Info(fmt.Sprintf("Transaction %s successfully checked", req.String()))
+	logger.Info(fmt.Sprintf("Transaction OK"))
 	return types.ResponseCheckTx{Code: code.CodeTypeOK, GasWanted: 1}
 }
 
@@ -305,10 +305,10 @@ func (app *Application) Query(reqQuery types.RequestQuery) (resQuery types.Respo
 					resQuery.Log = "Not authorized"
 				} else {
 					if value == nil {
-						logger.Warning(fmt.Sprintf("%s = N/A", reqQuery.String()))
+						//logger.Warning(fmt.Sprintf("%s = N/A", reqQuery.String()))
 						resQuery.Log = "Not available value"
 					} else {
-						logger.Info(fmt.Sprintf("%s = %s", reqQuery.String(), value))
+						//logger.Info(fmt.Sprintf("%s = %s", reqQuery.String(), value))
 						resQuery.Log = "Stored value"
 					}
 					resQuery.Value = value
