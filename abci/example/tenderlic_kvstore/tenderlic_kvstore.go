@@ -22,8 +22,8 @@ import (
 // Logger variables
 var logger = logging.MustGetLogger("TenderLICKVstore")
 var format = logging.MustStringFormatter(`%{level:.1s}[%{time:2006-01-02|15:04:05.000}] %{message}`)
-var backend1 = logging.NewLogBackend(os.Stderr, "", 0)
-var backend2 = logging.NewLogBackend(os.Stderr, "", 0)
+var backend1 = logging.NewLogBackend(os.Stdout, "", 0)
+var backend2 = logging.NewLogBackend(os.Stdout, "", 0)
 var backend2Formatter = logging.NewBackendFormatter(backend2, format)
 var backend1Leveled = logging.AddModuleLevel(backend1)
 
