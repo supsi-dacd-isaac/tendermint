@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net"
 	"os"
 	"strconv"
@@ -157,7 +156,7 @@ func (app *Application) SetLogger() {
 }
 
 func (app *Application) checkSigner(data []string) (res bool) {
-	nodeNameRaw, _ := ioutil.ReadFile(fmt.Sprintf("%s/name", os.Getenv("HOME")))
+	/*nodeNameRaw, _ := ioutil.ReadFile(fmt.Sprintf("%s/name", os.Getenv("HOME")))
 	nodeName := strings.TrimSuffix(string(nodeNameRaw), "\n")
 
 	if data[0] != "allowed" {
@@ -165,7 +164,7 @@ func (app *Application) checkSigner(data []string) (res bool) {
 			logger.Warning(fmt.Sprintf("Meter \"%s\" is trying to cheat signing a transaction as / doing a query about meter \"%s\"", nodeName, data[1]))
 			return false
 		}
-	}
+	}*/
 	return true
 }
 

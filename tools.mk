@@ -38,7 +38,7 @@ mkfile_dir := $(shell cd $(shell dirname $(mkfile_path)); pwd)
 # Go tools
 ###
 
-TOOLS_DESTDIR  ?= $(GOPATH)/bin
+#TOOLS_DESTDIR = $(GOPATH)/bin
 
 CERTSTRAP     = $(TOOLS_DESTDIR)/certstrap
 PROTOBUF     	= $(TOOLS_DESTDIR)/protoc
