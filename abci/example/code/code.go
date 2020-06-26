@@ -6,7 +6,7 @@ const (
 	CodeTypeEncodingError uint32 = 1
 	CodeTypeBadNonce      uint32 = 2
 	CodeTypeUnauthorized  uint32 = 3
-	CodeTypeCheatingMeter uint32 = 4
 	CodeTypeBadRequest    uint32 = 5
-	CodeTypeBadTimeFormat uint32 = 6
+	CodeNotPositiveAmount uint32 = 7
+	CodeExceedingAmount   uint32 = 8
 )

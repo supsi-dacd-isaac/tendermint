@@ -28,6 +28,7 @@ func main() {
 		cmd.ShowNodeIDCmd,
 		cmd.GenNodeKeyCmd,
 		cmd.VersionCmd,
+		cmd.ShowMacHashesCmd,
 		debug.DebugCmd,
 	)
 
